@@ -1,0 +1,122 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Timeline | Nested Groups example</title>
+
+  <style>
+    body, html {
+      font-family: arial, sans-serif;
+      font-size: 11pt;
+    }
+
+    #visualization {
+      box-sizing: border-box;
+      width: 100%;
+      height: auto;
+    }
+  </style>
+
+  <!-- note: moment.js must be loaded before vis.js, else vis.js uses its embedded version of moment.js -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+
+  <script src="node_modules/vis/dist/vis.min.js"></script>
+  <link href="node_modules/vis/dist/vis.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="visualization"></div>
+<div id="log"></div>
+
+<script>
+  Draw()
+  async function Draw(){
+    const serverList = (await (await fetch('/api/v1/server/list')).json()).data
+    const now = moment().minutes(0).seconds(0).milliseconds(0)
+    const itemCount = 60
+
+    function GetServerInstanceId(deployTypeId, serverId){
+      return 100 * deployTypeId + serverId;
+    }
+
+    function CreateDeployTypeGroup(id, name){
+      return {
+        id: id,
+        content: name,
+        nestedGroups: serverList.map((s) => GetServerInstanceId(id, s.id))
+      }
+    }
+
+    function CreateServerGroup(deployId, id, name){
+      return {
+        id: GetServerInstanceId(deployId, id),
+        content: name,
+      }
+    }
+
+    // create a data set with groups
+    const groups = new vis.DataSet()
+    groups.add([
+      CreateDeployTypeGroup(1, 'prod'),
+      CreateDeployTypeGroup(2, 'prod-staging'),
+      CreateDeployTypeGroup(3, 'devel'),
+      CreateDeployTypeGroup(4, 'devel-staging'),
+    ]);
+
+    groups.add(groups.getIds().reduce((all, curr) => {
+      const serverGroups = serverList.map((item) => CreateServerGroup(curr, item.id, item.name))
+      return all.concat(serverGroups)
+    }, []));
+
+    // create a dataset with items
+    var items = new vis.DataSet()
+    var groupIds = groups.getIds().filter((id) => id > 10)
+
+    for (const groupId of groupIds){
+      var start = now.clone().add(Math.random() * 24 - 5, 'hours')
+      var end = start.clone().add(24 * (1 + (Math.random()*3|0)), 'hours')
+
+      items.add({
+        id: groupId,
+        group: groupId,
+        content: 'fix/Bugfix/VeryImportantBugfix',
+        start: start,
+        end: end,
+        type: 'range'
+      });
+    }
+
+    // create visualization
+    var container = document.getElementById('visualization')
+    var options = {
+      groupOrder: 'content'  // groupOrder can be a property name or a sorting function
+    }
+
+    var timeline = new vis.Timeline(container, items, groups, options)
+    timeline.on('click', (properties) => {
+      logEvent('click', properties)
+    })
+
+    function stringifyObject(object){
+      if (!object) 
+        return
+      var replacer = function(key, value) {
+        if (value && value.tagName) {
+          return "DOM Element"
+        } else {
+          return value
+        }
+      }
+      return JSON.stringify(object, replacer)
+    }
+
+    function logEvent(event, properties){
+      var log = document.getElementById('log')
+      var msg = document.createElement('div')
+      msg.innerHTML = 'event=' + JSON.stringify(event) + ', ' +
+          'properties=' + stringifyObject(properties)
+      log.firstChild ? log.insertBefore(msg, log.firstChild) : log.appendChild(msg)
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DeployManagerApi": {
+      "commandName": "Project",
+      "commandLineArgs": "D:\\Development\\DeployManager\\web 8080"
+    }
+  }
+}
