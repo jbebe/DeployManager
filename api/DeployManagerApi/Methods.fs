@@ -9,3 +9,7 @@ module Methods =
             |> Array.map (fun (id, name) -> { Id = id; Name = name })
     }
 
+    let GetReservations: ReservationListResponse = { 
+        Data = ServerOperations.GetServerList 
+            |> Array.map (fun (id, name) -> { Id = id; Name = name })
+    }

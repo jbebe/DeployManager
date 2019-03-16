@@ -5,6 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Reservation\Entities\ReservationList.fs" />
+    <Compile Include="Reservation\ReservationOperations.fs" />
+    <Compile Include="Enums.fs" />
     <Compile Include="Server\Entities\ServerList.fs" />
     <Compile Include="Server\ServerOperations.fs" />
   </ItemGroup>

@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="Config\JsonConfig.fs" />
     <Compile Include="Entities\Contracts.fs" />
     <Compile Include="Methods.fs" />
     <Compile Include="DeployManager.fs" />
