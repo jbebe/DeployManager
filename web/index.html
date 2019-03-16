@@ -1,5 +1,6 @@
 
 <!DOCTYPE HTML>
+<!--suppress ALL -->
 <html>
 <head>
   <title>Timeline | Nested Groups example</title>
@@ -18,7 +19,7 @@
   </style>
 
   <!-- note: moment.js must be loaded before vis.js, else vis.js uses its embedded version of moment.js -->
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
 
   <script src="node_modules/vis/dist/vis.min.js"></script>
   <link href="node_modules/vis/dist/vis.min.css" rel="stylesheet" type="text/css" />
@@ -28,62 +29,50 @@
 <div id="log"></div>
 
 <script>
+  function GetServerId(serverType, deployType){
+      return `${serverType}/${deployType}`
+  }
+
   Draw()
   async function Draw(){
-    const serverList = (await (await fetch('/api/v1/server/list')).json()).data
+    const resourceTypes = await (await fetch('/api/resourcetype')).json()
+    const deployTypes = resourceTypes.deployType
+    const serverTypes = resourceTypes.serverType
+
+    const serverInfos = await (await fetch('/api/serverinfo')).json()
     const now = moment().minutes(0).seconds(0).milliseconds(0)
     const itemCount = 60
 
-    function GetServerInstanceId(deployTypeId, serverId){
-      return 100 * deployTypeId + serverId;
-    }
-
-    function CreateDeployTypeGroup(id, name){
-      return {
-        id: id,
-        content: name,
-        nestedGroups: serverList.map((s) => GetServerInstanceId(id, s.id))
-      }
-    }
-
-    function CreateServerGroup(deployId, id, name){
-      return {
-        id: GetServerInstanceId(deployId, id),
-        content: name,
-      }
-    }
-
-    // create a data set with groups
     const groups = new vis.DataSet()
-    groups.add([
-      CreateDeployTypeGroup(1, 'prod'),
-      CreateDeployTypeGroup(2, 'prod-staging'),
-      CreateDeployTypeGroup(3, 'devel'),
-      CreateDeployTypeGroup(4, 'devel-staging'),
-    ]);
 
-    groups.add(groups.getIds().reduce((all, curr) => {
-      const serverGroups = serverList.map((item) => CreateServerGroup(curr, item.id, item.name))
-      return all.concat(serverGroups)
-    }, []));
+    // Create main groups (deploy types)
+    groups.add(deployTypes.map((dt) => ({
+        id: `deploy_${dt.id}`,
+        content: dt.name,
+        nestedGroups: serverTypes.map((st) => GetServerId(st.id, dt.id))
+    })))
+
+    // Create sub groups (server types)
+    groups.add(serverTypes.reduce((all, st) => {
+        deployTypes.forEach((dt) => {
+            all.push({
+                id: GetServerId(st.id, dt.id),
+                content: st.name
+            })
+        })
+        return all
+    }, []))
 
     // create a dataset with items
     var items = new vis.DataSet()
-    var groupIds = groups.getIds().filter((id) => id > 10)
-
-    for (const groupId of groupIds){
-      var start = now.clone().add(Math.random() * 24 - 5, 'hours')
-      var end = start.clone().add(24 * (1 + (Math.random()*3|0)), 'hours')
-
-      items.add({
-        id: groupId,
-        group: groupId,
+    items.add({
+        id: `1/2_1234`,
+        group: "1/2",
         content: 'fix/Bugfix/VeryImportantBugfix',
-        start: start,
-        end: end,
+        start: +new Date(),
+        end: +new Date() + 3000000,
         type: 'range'
-      });
-    }
+    });
 
     // create visualization
     var container = document.getElementById('visualization')
@@ -93,10 +82,10 @@
 
     var timeline = new vis.Timeline(container, items, groups, options)
     timeline.on('click', (properties) => {
-      logEvent('click', properties)
+        OnCreateReservationAsync(properties)
     })
 
-    function stringifyObject(object){
+    function StringifyObject(object){
       if (!object) 
         return
       var replacer = function(key, value) {
@@ -109,12 +98,35 @@
       return JSON.stringify(object, replacer)
     }
 
+    async function OnCreateReservationAsync(properties) {
+        const rawResponse = await fetch('api/reservation', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                DeployType: 1,
+                ServerType: 1,
+                BranchName: 'fix/Test/Example',
+                Author: 'Bálint Juhász',
+                ReservedInterval: {
+                    From: new Date().toJSON(),
+                    To: new Date(+new Date() + 3000000).toJSON()
+                },
+            })
+        });
+        const content = await rawResponse.json();
+        console.log(content);
+    }
+    
     function logEvent(event, properties){
-      var log = document.getElementById('log')
+        console.log(event, properties);
+      /*var log = document.getElementById('log')
       var msg = document.createElement('div')
       msg.innerHTML = 'event=' + JSON.stringify(event) + ', ' +
-          'properties=' + stringifyObject(properties)
-      log.firstChild ? log.insertBefore(msg, log.firstChild) : log.appendChild(msg)
+          'properties=' + StringifyObject(properties)
+      log.firstChild ? log.insertBefore(msg, log.firstChild) : log.appendChild(msg)*/
     }
   }
 </script>
