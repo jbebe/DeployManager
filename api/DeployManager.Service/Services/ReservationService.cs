@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using Common.Utils;
 
 namespace DeployManager.Service.Services
 {
@@ -33,13 +34,42 @@ namespace DeployManager.Service.Services
             return RedisDb.SortedSetAddAsync(key, value, score);
         }
 
-        public async Task<IEnumerable<ReservationInfoEntity>> GetReservationsAsync(Entities.ServerType server, DeployType deploy, DateTime from, DateTime? to)
+        public async Task<IEnumerable<ReservationInfoEntity>> GetReservationsAsync(Entities.ServerType? server, DeployType? deploy, DateTime? from, DateTime? to)
         {
-            string key = GetKey(server, deploy);
-            double toTicks = to?.Ticks ?? double.PositiveInfinity;
-            var result = await RedisDb.SortedSetRangeByScoreAsync(key, from.Ticks, toTicks);
+            var servers = new List<Entities.ServerType>();
+            if (server.HasValue)
+            {
+                servers.Add(server.Value);
+            }
+            else
+            {
+                servers.AddRange(default(Entities.ServerType).Values());
+            }
 
-            return result.Select((json) => JsonConvert.DeserializeObject<ReservationInfoEntity>(json));
+            var deploys = new List<DeployType>();
+            if (deploy.HasValue)
+            {
+                deploys.Add(deploy.Value);
+            }
+            else
+            {
+                deploys.AddRange(default(DeployType).Values());
+            }
+
+            var results = new List<string>();
+            foreach (var serverType in servers)
+            {
+                foreach (var deployType in deploys)
+                {
+                    string key = GetKey(serverType, deployType);
+                    double fromTicks = from?.Ticks ?? double.NegativeInfinity;
+                    double toTicks = to?.Ticks ?? double.PositiveInfinity;
+                    var result = await RedisDb.SortedSetRangeByScoreAsync(key, fromTicks, toTicks);
+                    results.AddRange(result.Select((rv) => (string)rv));
+                }
+            }
+
+            return results.Select((json) => JsonConvert.DeserializeObject<ReservationInfoEntity>(json));
         }
     }
 }

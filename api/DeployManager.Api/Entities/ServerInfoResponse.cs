@@ -2,14 +2,20 @@
 
 namespace DeployManager.Api.Entities
 {
-    public class ServerInfoResponse: ServerInfoEntity
+    public class ServerInfoResponse
     {
+        public int DeployType { get; set; }
+
+        public int ServerType { get; set; }
+
+        public string Url { get; set; }
+
         public static ServerInfoResponse Create(ServerInfoEntity serverInfo)
         {
             return new ServerInfoResponse
             {
-                DeployType = serverInfo.DeployType,
-                ServerType = serverInfo.ServerType,
+                DeployType = (int)serverInfo.DeployType,
+                ServerType = (int)serverInfo.ServerType,
                 Url = serverInfo.Url,
             };
         }

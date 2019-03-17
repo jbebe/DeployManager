@@ -1,0 +1,36 @@
+<mat-toolbar class="menu">
+
+  <span class="menu_left">
+
+    <button mat-button routerLink="reservation" routerLinkActive="link-active">
+      <mat-icon class="icon_today">today</mat-icon>
+      <span>Reservation</span>
+    </button>
+    <button mat-button routerLink="free-resources" routerLinkActive="link-active">
+      <mat-icon class="icon_storage">storage</mat-icon>
+      <span>Free Resources</span>
+    </button>
+    <button mat-button routerLink="batch-reservation" routerLinkActive="link-active">
+      <mat-icon class="icon_filter_none">filter_none</mat-icon>
+      <span>Batch Reservation</span>
+    </button>
+
+  </span>
+
+  <span class="menu_right">
+
+    <button mat-button routerLink="admin-panel" routerLinkActive="link-active">
+      <mat-icon class="icon_account_circle">account_circle</mat-icon>
+      <span>Admin Panel</span>
+    </button>
+
+    <button mat-button (click)="$location.path('127.0.0.1')">
+      <mat-icon class="icon_bug_report">bug_report</mat-icon>
+      <span>Bug Report</span>
+    </button>
+
+  </span>
+
+</mat-toolbar>
+
+<router-outlet></router-outlet>

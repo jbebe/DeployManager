@@ -4,8 +4,8 @@ namespace DeployManager.Api.Entities
 {
     public class ResourceTypeResponse
     {
-        public IEnumerable<ResourceTypeItemResponse> DeployType { get; set; }
+        public IEnumerable<ResourceTypeItemResponse> DeployTypes { get; set; }
 
-        public IEnumerable<ResourceTypeItemResponse> ServerType { get; set; }
+        public IEnumerable<ResourceTypeItemResponse> ServerTypes { get; set; }
     }
 }

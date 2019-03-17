@@ -13,5 +13,7 @@ namespace DeployManager.Service.Entities
         public string Author { get; set; }
 
         public DateTimeInterval ReservedInterval { get; set; }
+
+        public ReservationInfoEntity PreviousReservation { get; set; }
     }
 }

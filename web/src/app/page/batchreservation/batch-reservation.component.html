@@ -1,0 +1,37 @@
+<h1 mat-dialog-title>Create new reservation (express)</h1>
+
+<div>
+  <div>
+  <mat-form-field>
+    <mat-select placeholder="Server Type" [formControl]="formServerType" multiple>
+      <mat-option *ngFor="let server of infoService.serverTypes" [value]="server.id">
+        {{ server.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="Deploy Type" [formControl]="formDeployType">
+      <mat-option *ngFor="let deploy of infoService.deployTypes" [value]="deploy.id">
+        {{ deploy.name }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Duration" value="1d 3h 30m">
+    </mat-form-field>
+  </div>
+
+  <p>
+    {{ reservationPeriod }}
+  </p>
+
+  <div>
+    <button [style.marginRight]="'10px'" mat-raised-button color="basic" (click)="calculateClosestPeriod()">Calculate closest reservation period</button>
+    <button mat-raised-button color="primary">Send request</button>
+  </div>
+
+</div>

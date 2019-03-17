@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>Create new reservation</h1>
+
+<mat-dialog-content>
+
+  <mat-form-field>
+    <mat-label>Date</mat-label>
+    <input [value]="date.value" matInput [matDatepicker]="myPicker" placeholder="date">
+    <mat-datepicker-toggle  matSuffix [for]="myPicker"></mat-datepicker-toggle>
+    <mat-datepicker #myPicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field>
+
+    <input [style.display]="'none'" matInput [ngxTimepicker]="timepicker">
+    <ngx-material-timepicker-toggle [for]="timepicker"></ngx-material-timepicker-toggle>
+    <ngx-material-timepicker #timepicker></ngx-material-timepicker>
+
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+  <button mat-button [mat-dialog-close]="true">Cancel</button>
+  <button mat-button mat-dialog-close>Create</button>
+
+</mat-dialog-actions>
+

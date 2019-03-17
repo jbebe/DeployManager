@@ -1,0 +1,64 @@
+<h1 mat-dialog-title>Create new reservation</h1>
+
+<mat-dialog-content>
+
+  <div>
+    <mat-form-field>
+      <mat-select placeholder="Server Type" [formControl]="formServerType">
+        <mat-option *ngFor="let server of infoService.serverTypes" [value]="server.id">
+          {{ server.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Deploy Type" [formControl]="formDeployType">
+        <mat-option *ngFor="let deploy of infoService.deployTypes" [value]="deploy.id">
+          {{ deploy.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div>
+
+    <mat-form-field>
+      <mat-label>Date</mat-label>
+      <input (dateChange)="onDateTimeChange()" [formControl]="formFromDate" matInput [matDatepicker]="fromdatepicker" placeholder="date" (click)="fromdatepicker.open()">
+      <mat-datepicker #fromdatepicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input [formControl]="formFromTime" (change)="onDateTimeChange()" matInput placeholder="Time" [ngxTimepicker]="fromtimepicker" [format]="24" readonly>
+      <ngx-material-timepicker #fromtimepicker (closed)="onDateTimeChange()"></ngx-material-timepicker>
+    </mat-form-field>
+
+  </div>
+
+  <div>
+
+    <mat-form-field>
+      <mat-label>Date</mat-label>
+      <input (dateChange)="onDateTimeChange()" [formControl]="formToDate" matInput [matDatepicker]="todatepicker" placeholder="date" (click)="todatepicker.open()">
+      <mat-datepicker #todatepicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input [formControl]="formToTime" matInput placeholder="Time" [ngxTimepicker]="totimepicker" [format]="24" readonly>
+      <ngx-material-timepicker #totimepicker (closed)="onDateTimeChange()"></ngx-material-timepicker>
+    </mat-form-field>
+
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <p>{{ timeSpan }}</p>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button (click)="onSubmit()">Create</button>
+
+</mat-dialog-actions>

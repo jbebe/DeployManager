@@ -1,0 +1,33 @@
+mat-toolbar.menu {
+  margin-bottom: 10px;
+}
+
+mat-icon.icon_today {
+  color: #e2b300;
+}
+
+mat-icon.icon_storage {
+  color: #00a300;
+}
+
+mat-icon.icon_account_circle {
+  color: #0076f7;
+}
+
+mat-icon {
+  margin-right: 4px;
+}
+
+.menu_left {
+  flex: 1;
+  text-align: left;
+}
+
+.menu_right {
+  flex: 1;
+  text-align: right;
+}
+
+.link-active {
+  background-color: #d8d8d8;
+}

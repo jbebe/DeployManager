@@ -1,0 +1,10 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~@angular/material/theming';
+
+// Create a config with the default typography levels.
+$config: mat-typography-config();
+
+* {
+  font-family: mat-font-family($config);
+}

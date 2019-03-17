@@ -16,8 +16,8 @@ namespace DeployManager.Api.Controllers
         {
             return new ResourceTypeResponse
             {
-                DeployType = default(DeployType).Select(ResourceTypeItemResponse.Create),
-                ServerType = default(ServerType).Select(ResourceTypeItemResponse.Create),
+                DeployTypes = default(DeployType).Select(ResourceTypeItemResponse.Create),
+                ServerTypes = default(ServerType).Select(ResourceTypeItemResponse.Create),
             };
         }
     }

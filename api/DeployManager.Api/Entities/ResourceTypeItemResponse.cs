@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.Utils;
+using System;
 
 namespace DeployManager.Api.Entities
 {
@@ -8,11 +9,11 @@ namespace DeployManager.Api.Entities
 
         public string Name { get; set; }
 
-        public static ResourceTypeItemResponse Create<T>(T enumType) where T : Enum
+        public static ResourceTypeItemResponse Create<T>(T val) where T : Enum
             => new ResourceTypeItemResponse
             {
-                Id = int.Parse(enumType.ToString("D")),
-                Name = enumType.ToString("G")
+                Id = val.NumericValue(),
+                Name = val.ToString("G")
             };
     }
 }

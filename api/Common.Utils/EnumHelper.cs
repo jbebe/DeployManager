@@ -12,5 +12,15 @@ namespace Common.Utils
                 yield return func(deployType);
             }
         }
+
+        public static IEnumerable<T> Values<T>(this T obj) where T : Enum
+        {
+            foreach (T deployType in Enum.GetValues(typeof(T)))
+            {
+                yield return deployType;
+            }
+        }
+
+        public static int NumericValue<T>(this T obj) where T: Enum => int.Parse(obj.ToString("D"));
     }
 }
