@@ -1,13 +1,13 @@
-import { DateTimeInterval } from './DateTimeInterval';
-
 export class ReservationItem {
 
   constructor(
-    public deployType: number,
-    public serverType: number,
-    public branchName: string,
-    public author: string,
-    public reservedInterval: DateTimeInterval,
-    public previousReservation: ReservationItem = null,
+    public Id: string,
+    public DeployType: number,
+    public ServerType: number,
+    public BranchName: string,
+    public Author: string,
+    public Start: Date,
+    public End: Date,
+    public Previous: string,
   ) {}
 }

@@ -1,8 +1,7 @@
 ﻿using System.Linq;
-using DeployManager.Api.Entities;
-using DeployManager.Service.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Common.Utils;
+using DeployManager.Api.Entities;
+using DeployManager.Api.Helper;
 
 namespace DeployManager.Api.Controllers
 {

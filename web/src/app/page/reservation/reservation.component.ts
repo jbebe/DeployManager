@@ -31,11 +31,6 @@ export class ReservationComponent implements OnInit {
   private async drawAsync() {
     const deployTypes = await this.infoService.getDeployTypesAsync();
     const serverTypes = await this.infoService.getServerTypesAsync();
-
-    const serverInfos = await this.infoService.getServerInstancesAsync();
-    const now = moment().minutes(0).seconds(0).milliseconds(0);
-    const itemCount = 60;
-
     const groups = new DataSet();
 
     // Create main groups (deploy types)

@@ -15,9 +15,4 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Common.Utils\Common.Utils.csproj" />
-    <ProjectReference Include="..\DeployManager.Service\DeployManager.Service.csproj" />
-  </ItemGroup>
-
 </Project>
