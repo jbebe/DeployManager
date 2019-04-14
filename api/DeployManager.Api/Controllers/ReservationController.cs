@@ -20,7 +20,7 @@ namespace DeployManager.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Reservation
+        // GET: api/reservation
         [HttpGet]
         public IEnumerable<Reservation> GetReservation()
         {
