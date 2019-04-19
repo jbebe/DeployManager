@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [dbo].[ServerType]
 (
-    [Id]          INT          NOT NULL,
-    [Name]        VARCHAR(128) NOT NULL,
-    [Description] VARCHAR(512) NOT NULL,
+    [Id]          INT           NOT NULL,
+    [Name]        VARCHAR(128)  NOT NULL,
+    [Description] NVARCHAR(512) NOT NULL,
 
     PRIMARY KEY CLUSTERED ([Id] ASC)
 )

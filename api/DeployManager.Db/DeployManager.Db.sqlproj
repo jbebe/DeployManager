@@ -124,10 +124,11 @@
     <Folder Include="dbo\Functions\" />
     <Folder Include="dbo\Stored Procedures\" />
     <Folder Include="Security\" />
+    <Folder Include="Seed" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Reservation.sql" />
-    <Build Include="dbo\Functions\GenerateId.sql" />
+    <Build Include="dbo\Functions\GenerateHash.sql" />
     <Build Include="dbo\Tables\BatchReservation.sql" />
     <Build Include="dbo\Tables\ServerType.sql" />
     <Build Include="dbo\Tables\DeployType.sql" />
@@ -135,5 +136,9 @@
     <Build Include="dbo\Tables\User.sql" />
     <Build Include="dbo\Tables\DeployPermission.sql" />
     <Build Include="Security\deploymanager.sql" />
+    <Build Include="dbo\Functions\GenerateRandomId.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Seed\InitDeployDb.sql" />
   </ItemGroup>
 </Project>

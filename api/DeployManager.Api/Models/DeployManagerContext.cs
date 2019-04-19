@@ -6,6 +6,8 @@ namespace DeployManager.Api.Models
 {
     public partial class DeployManagerContext : DbContext
     {
+        private string ConnectionString { get; set; }
+
         public DeployManagerContext()
         {
         }
@@ -27,8 +29,7 @@ namespace DeployManager.Api.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=DeployManager;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer(ConnectionString);
             }
         }
 
@@ -74,8 +75,7 @@ namespace DeployManager.Api.Models
 
                 entity.Property(e => e.Description)
                     .IsRequired()
-                    .HasMaxLength(512)
-                    .IsUnicode(false);
+                    .HasMaxLength(512);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -146,8 +146,7 @@ namespace DeployManager.Api.Models
 
                 entity.Property(e => e.Description)
                     .IsRequired()
-                    .HasMaxLength(512)
-                    .IsUnicode(false);
+                    .HasMaxLength(512);
 
                 entity.Property(e => e.Name)
                     .IsRequired()

@@ -1,5 +1,5 @@
-﻿CREATE FUNCTION [dbo].[GenerateId]( @seed VARCHAR(MAX) )
-RETURNS VARCHAR (32)
+﻿CREATE FUNCTION [dbo].[GenerateHash]( @seed VARCHAR(MAX) )
+RETURNS VARCHAR(32)
 AS
 BEGIN
     RETURN 

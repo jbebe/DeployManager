@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using DeployManager.Api.Entities;
-using DeployManager.Api.Helper;
+using DeployManager.Api.Services;
 
 namespace DeployManager.Api.Controllers
 {
@@ -9,15 +8,16 @@ namespace DeployManager.Api.Controllers
     [ApiController]
     public class ResourceController : ControllerBase
     {
+        public ResourceService Service { get; }
+
+        public ResourceController(ResourceService service)
+        {
+            Service = service;
+        }
+
         // GET api/resource/type
         [HttpGet("type")]
-        public ActionResult<ResourceTypeResponse> GetResourceType()
-        {
-            return new ResourceTypeResponse
-            {
-                DeployTypes = default(DeployType).Select(ResourceTypeItemResponse.Create),
-                ServerTypes = default(ServerType).Select(ResourceTypeItemResponse.Create),
-            };
-        }
+        public ActionResult<ResourceTypeResponse> GetResourceTypes()
+            => Service.GetResourceTypes();
     }
 }

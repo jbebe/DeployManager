@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http;
+using DeployManager.Api.Services;
 
 namespace DeployManager.Api
 {
@@ -30,6 +31,8 @@ namespace DeployManager.Api
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<DeployManagerContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DeployManagerConnection")));
+
+            services.AddScoped<ResourceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
