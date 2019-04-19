@@ -16,7 +16,7 @@ A single reservation on a single server with all the important informations.
 |      | Id          | DeployType | ServerType | BranchName    | UserId      | Start    | End      |
 |------|-------------|------------|------------|---------------|-------------|----------|----------|
 | Type | varchar(32) | int        | int        | nvarchar(512) | varchar(32) | datetime | datetime |
-| Description | 32 byte hash of the rest of the fields | value of DeployType enum | value of ServerType enum | Name of the branch that will be checked out for deploy | Email address or other identifier of the author who committed the reservation | Starting date of the reservation | End date of the reservation
+| Description | 32 byte hash of the rest of the fields | Value of DeployType enum | Value of ServerType enum | Name of the branch that will be checked out for deploy | Email address or other identifier of the author who committed the reservation | Starting date of the reservation | End date of the reservation
 
 #### BatchReservation
 
@@ -52,14 +52,14 @@ Keeps track of the actual instances. (deploy+server combinations)
 | Type | int        | int        | bit       |
 | Description | value of DeployType enum | value of ServerType enum | Whether the server is available for reservation or not. Availability can be set to false temporarily if needed.
 
-#### UserAuth
+#### User
 
 |      | Id          | Name          | Enabled |
 |------|-------------|---------------|---------|
 | Type | varchar(32) | nvarchar(512) | bit     |
 | Description | Id of the user | Name of the user or email address | Whether the user is enabled to use the service or not. Useful for temporal suspension.
 
-#### DeployTypeAuth
+#### DeployPermission
 
 |      | UserId      | DeployType | Permission |
 |------|-------------|------------|------------|
@@ -68,7 +68,7 @@ Keeps track of the actual instances. (deploy+server combinations)
 
 ### Endpoints
 
-#### Server information
+#### Server information (resources)
 
 **Get slots and servers**
 ```

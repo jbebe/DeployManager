@@ -7,3 +7,5 @@
 .vs
 .idea
 /api/DeployManager.Db/Import Schema Logs
+/**/*.dbmdl
+/**/*.jfm
