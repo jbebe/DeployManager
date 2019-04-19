@@ -13,7 +13,6 @@ namespace DeployManager.Api.Controllers
         [HttpGet("type")]
         public ActionResult<ResourceTypeResponse> GetResourceType()
         {
-
             return new ResourceTypeResponse
             {
                 DeployTypes = default(DeployType).Select(ResourceTypeItemResponse.Create),
