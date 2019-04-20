@@ -1,4 +1,4 @@
-﻿namespace DeployManager.Api.Entities
+﻿namespace DeployManager.Test.Entities
 {
     public enum DeployType
     {

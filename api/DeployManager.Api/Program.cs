@@ -21,7 +21,8 @@ namespace DeployManager.Api
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) => {
                     config.SetBasePath(Directory.GetCurrentDirectory());
-                    config.AddJsonFile("appsettings.Secret.json", optional: false, reloadOnChange: true);
+                    config.AddEnvironmentVariables();
+                    config.AddJsonFile("appsettings.Secret.json", optional: true, reloadOnChange: true);
                 })
                 .UseStartup<Startup>();
     }

@@ -1,10 +1,11 @@
-﻿using DeployManager.Api.Entities;
+﻿using DeployManager.Test.Entities;
+using System.Threading.Tasks;
 
 namespace DeployManager.Test.Seed
 {
     internal class DeployTypeSeed: IDatabaseSeeder
     {
-        public void Seed(Api.Models.DeployManagerContext db)
+        public async Task SeedAsync(Api.Models.DeployManagerContext db)
         {
             db.DeployType.AddRange(
                 new Api.Models.DeployType()
@@ -26,7 +27,7 @@ namespace DeployManager.Test.Seed
                     Id = (int)DeployType.Development,
                     Name = "Development",
                     Description = "Development slot. Everything here is being tested before releasing to production.",
-                    Available = true,
+                    Available = false,
                 },
                 new Api.Models.DeployType()
                 {
@@ -36,6 +37,8 @@ namespace DeployManager.Test.Seed
                     Available = true,
                 }
             );
+
+            await db.SaveChangesAsync();
         }
     }
 }

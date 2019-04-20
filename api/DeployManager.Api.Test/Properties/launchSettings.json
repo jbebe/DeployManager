@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DeployManager.Test": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Test"
+      }
+    }
+  }
+}

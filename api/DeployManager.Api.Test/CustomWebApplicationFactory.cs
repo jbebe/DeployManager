@@ -5,6 +5,7 @@ using DeployManager.Test.Seed;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -14,6 +15,8 @@ namespace DeployManager.Test
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            builder.UseEnvironment("Test");
+
             builder.ConfigureServices(services =>
             {
                 // Create a new service provider.
@@ -50,13 +53,13 @@ namespace DeployManager.Test
                         };
                         foreach (var seeder in seeders)
                         {
-                            seeder.Seed(appDb);
+                            seeder.SeedAsync(appDb).Wait();
                         }
                     }
                     catch (Exception ex)
                     {
                         logger.LogError(ex, "An error occurred seeding the " +
-                                            "database with test messages. Error: {ex.Message}");
+                                            "database. Error: {ex.Message}");
                     }
                 }
             });

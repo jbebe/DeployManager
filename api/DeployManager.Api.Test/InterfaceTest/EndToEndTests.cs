@@ -1,8 +1,8 @@
 using DeployManager.Api;
 using DeployManager.Api.Entities;
 using DeployManager.Api.Helper;
+using DeployManager.Test.Entities;
 using Newtonsoft.Json;
-using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -10,11 +10,11 @@ using Xunit;
 
 namespace DeployManager.Test
 {
-    public class ResourceControllerIntegrationTests : IClassFixture<CustomWebApplicationFactory<Startup>>
+    public class EndToEndTests : IClassFixture<CustomWebApplicationFactory<Startup>>
     {
         private readonly HttpClient _client;
 
-        public ResourceControllerIntegrationTests(CustomWebApplicationFactory<Startup> factory)
+        public EndToEndTests(CustomWebApplicationFactory<Startup> factory)
         {
             _client = factory.CreateClient();
         }
@@ -31,7 +31,7 @@ namespace DeployManager.Test
             // Deserialize and examine results.
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
             var resourceTypes = JsonConvert.DeserializeObject<ResourceTypeResponse>(stringResponse);
-            Assert.Equal(2, resourceTypes.DeployTypes.Count);
+            Assert.Single(resourceTypes.DeployTypes);
             Assert.Equal(default(ServerType).Select((_) => 1).Count(), resourceTypes.ServerTypes.Count);
         }
     }

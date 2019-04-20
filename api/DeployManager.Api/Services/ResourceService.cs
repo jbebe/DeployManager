@@ -16,7 +16,7 @@ namespace DeployManager.Api.Services
         public ResourceTypeResponse GetResourceTypes()
             => new ResourceTypeResponse()
             {
-                DeployTypes = _context.DeployType.Select(ResourceTypeItemResponse.Create).ToList(),
+                DeployTypes = _context.DeployType.Where((d) => d.Available).Select(ResourceTypeItemResponse.Create).ToList(),
                 ServerTypes = _context.ServerType.Select(ResourceTypeItemResponse.Create).ToList(),
             };
     }

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Threading.Tasks;
 
 namespace DeployManager.Test.Seed
 {
     interface IDatabaseSeeder
     {
-        void Seed(Api.Models.DeployManagerContext db);
+        Task SeedAsync(Api.Models.DeployManagerContext db);
     }
 }

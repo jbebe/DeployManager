@@ -2,8 +2,12 @@
 -- User
 
 declare @adminName varchar(MAX) = 'DESKTOP-EGHMKPJ\bebe'
-declare @adminId varchar(32) = [dbo].[GenerateId](@adminName)
+declare @adminId varchar(32) = [dbo].[GenerateHash](@adminName)
 insert into [dbo].[User] values (@adminId, @adminName, 1)
+
+declare @userName varchar(MAX) = 'kovacs.janos'
+declare @userId varchar(32) = [dbo].[GenerateHash](@userName)
+insert into [dbo].[User] values (@userId, @userName, 1)
 
 -- DeployType
 
@@ -37,7 +41,8 @@ insert into [dbo].[ServerType] values
 -- DeployPermission
 
 insert into [dbo].[DeployPermission] values
-    (@adminId, 4, 4)
+    (@adminId, 4, 4),
+    (@userId,  4, 3)
 
 -- ServerInstance
 
@@ -62,7 +67,42 @@ insert into [dbo].[ServerInstance] values
 
 -- Reservation
 
-insert into [dbo].[Reservation] values
-    ([dbo].[GenerateRandomId](), 1, 1, 'fix/AccountApi/asdasdasd', @adminId, SYSDATETIME(), DATEADD(D, 1, SYSDATETIME()))
+declare @id varchar(32)
 
-select format(rand(), 'N17')
+exec @id = [dbo].[GenerateRandomId]
+insert into [dbo].[Reservation] values
+    (@id, 4, 1, 'feature/AccountApi/FullRewrite', @adminId, SYSDATETIME(), DATEADD(W, 1, SYSDATETIME()))
+
+exec @id = [dbo].[GenerateRandomId]
+insert into [dbo].[Reservation] values
+    (@id, 4, 2, 'feature/AccountApi/FullRewrite', @adminId, SYSDATETIME(), DATEADD(W, 1, SYSDATETIME()))
+
+exec @id = [dbo].[GenerateRandomId]
+insert into [dbo].[Reservation] values
+    (@id, 4, 3, 'feature/AccountApi/FullRewrite', @adminId, SYSDATETIME(), DATEADD(W, 1, SYSDATETIME()))
+
+
+exec @id = [dbo].[GenerateRandomId]
+insert into [dbo].[Reservation] values
+    (@id, 4, 4, 'feature/ShareServer/RefactorAll', @adminId, SYSDATETIME(), DATEADD(D, 2, SYSDATETIME()))
+
+exec @id = [dbo].[GenerateRandomId]
+insert into [dbo].[Reservation] values
+    (@id, 4, 5, 'feature/ShareServer/RefactorAll', @adminId, SYSDATETIME(), DATEADD(D, 2, SYSDATETIME()))
+
+exec @id = [dbo].[GenerateRandomId]
+insert into [dbo].[Reservation] values
+    (@id, 4, 6, 'feature/ShareServer/RefactorAll', @adminId, SYSDATETIME(), DATEADD(D, 2, SYSDATETIME()))
+
+
+exec @id = [dbo].[GenerateRandomId]
+insert into [dbo].[Reservation] values
+    (@id, 4, 7, 'fix/SendServer/DecreaseReadability', @userId, SYSDATETIME(), DATEADD(D, 2, SYSDATETIME()))
+
+exec @id = [dbo].[GenerateRandomId]
+insert into [dbo].[Reservation] values
+    (@id, 4, 8, 'fix/SendServer/DecreaseReadability', @userId, SYSDATETIME(), DATEADD(D, 2, SYSDATETIME()))
+
+exec @id = [dbo].[GenerateRandomId]
+insert into [dbo].[Reservation] values
+    (@id, 4, 9, 'fix/SendServer/DecreaseReadability', @userId, SYSDATETIME(), DATEADD(D, 2, SYSDATETIME()))

@@ -14,6 +14,12 @@ using DeployManager.Api.Services;
 
 namespace DeployManager.Api
 {
+    public static class HostingEnvironmentExtenstions
+    {
+        public static bool IsTestEnvironment(this IHostingEnvironment env)
+            => env.IsEnvironment("Test");
+    }
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -47,31 +53,34 @@ namespace DeployManager.Api
                 app.UseHsts();
             }
 
-            app.Use(async (context, next) =>
-            {
-                var user = (WindowsIdentity)context.User.Identity;
-
-                if (!user.IsAuthenticated)
-                {
-                    context.Response.StatusCode = 400;
-                    await context.Response.WriteAsync("No access");
-                    return;
-                }
-
-                await next();
-            });
-
             app.UseHttpsRedirection();
             app.UseMvc();
 
-            string staticFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "web", "dist");
-            app.UseFileServer(new FileServerOptions
+            if (!env.IsTestEnvironment())
             {
-                EnableDefaultFiles = true,
-                EnableDirectoryBrowsing = false,
-                FileProvider = new PhysicalFileProvider(staticFilePath),
-                RequestPath = "",
-            });
+                app.Use(async (context, next) =>
+                {
+                    var user = (WindowsIdentity)context.User.Identity;
+
+                    if (!user.IsAuthenticated)
+                    {
+                        context.Response.StatusCode = 400;
+                        await context.Response.WriteAsync("No access");
+                        return;
+                    }
+
+                    await next();
+                });
+
+                string staticFilePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "web", "dist");
+                app.UseFileServer(new FileServerOptions
+                {
+                    EnableDefaultFiles = true,
+                    EnableDirectoryBrowsing = false,
+                    FileProvider = new PhysicalFileProvider(staticFilePath),
+                    RequestPath = "",
+                });
+            }
         }
     }
 }
