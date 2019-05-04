@@ -39,6 +39,8 @@ namespace DeployManager.Api
                 options.UseSqlServer(Configuration.GetConnectionString("DeployManagerConnection")));
 
             services.AddScoped<ResourceService>();
+            services.AddScoped<BatchReservationService>();
+            services.AddScoped<ReservationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

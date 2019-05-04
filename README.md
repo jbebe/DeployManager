@@ -143,7 +143,7 @@ Output:
             "deployType": 5,
             "serverType": 3,
             "branchName": "fix/ServerTools/SomeFixIDid",
-            "author": "balint.juhasz@tresorit.com",
+            "userId": "balint.juhasz@tresorit.com",
             "start": "2000-01-01 12:00:00",
             "end": "2000-02-02 12:02:02"
         }
@@ -167,7 +167,7 @@ Output:
         "deployType": 5,
         "serverType": 3,
         "branchName": "fix/ServerTools/SomeFixIDid",
-        "author": "balint.juhasz@tresorit.com",
+        "userId": "balint.juhasz@tresorit.com",
         "start": "2000-01-01 12:00:00",
         "end": "2000-02-02 12:02:02"
     }
@@ -189,7 +189,7 @@ Input:
         "deployType": 5,
         "serverType": 3,
         "branchName": "fix/ServerTools/SomeFixIDid",
-        "author": "balint.juhasz@tresorit.com",
+        "userId": "balint.juhasz@tresorit.com",
         "start": "2000-01-01 12:00:00",
         "end": "2000-02-02 12:02:02"
     }
@@ -210,7 +210,7 @@ Input:
         "deployType": 5,
         "serverType": 3,
         "branchName": "fix/ServerTools/SomeFixIDid",
-        "author": "balint.juhasz@tresorit.com",
+        "userId": "balint.juhasz@tresorit.com",
         "start": "2000-01-01 12:00:00",
         "end": "2000-02-02 12:02:02"
     }
@@ -271,14 +271,12 @@ Input:
         "deployType": 2,
         "serverTypes": [1, 2, 3, 4, 5],
         "branchName": "fix/ServerTools/SomeFixIDid",
-        "author": "balint.juhasz@tresorit.com",
-        "from": "2000-01-01 12:00:00",
-        "to": "2001-11-11 12:30:40"
+        "userId": "balint.juhasz@tresorit.com",
+        "start": "2000-01-01 12:00:00",
+        "end": "2001-11-11 12:30:40"
     }
 Output: 
     {
-        "from": "2000-01-01 12:00:00",
-        "to": "2001-11-11 12:30:40",
         "id": "837352334265",
         "reservations": [
             "764352334265", 
@@ -320,12 +318,12 @@ Input:
 Output: 
     [
         {
-            "from": "2000-01-01 12:00:00",
-            "to": "2001-11-11 12:30:40"
+            "start": "2000-01-01 12:00:00",
+            "end": "2001-11-11 12:30:40"
         },
         {
-            "from": "2000-01-01 12:00:00",
-            "to": "2001-11-11 12:30:40"
+            "start": "2000-01-01 12:00:00",
+            "end": "2001-11-11 12:30:40"
         }
     ]
 ```

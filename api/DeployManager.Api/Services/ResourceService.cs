@@ -1,23 +1,29 @@
-﻿using DeployManager.Api.Entities;
+﻿using DeployManager.Api.ApiEntities;
 using DeployManager.Api.Models;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DeployManager.Api.Services
 {
     public class ResourceService
     {
-        private readonly DeployManagerContext _context;
+        private DeployManagerContext Db { get; }
 
         public ResourceService(DeployManagerContext context)
         {
-            _context = context;
+            Db = context;
         }
 
         public ResourceTypeResponse GetResourceTypes()
             => new ResourceTypeResponse()
             {
-                DeployTypes = _context.DeployType.Where((d) => d.Available).Select(ResourceTypeItemResponse.Create).ToList(),
-                ServerTypes = _context.ServerType.Select(ResourceTypeItemResponse.Create).ToList(),
+                DeployTypes = Db.DeployType.Where((d) => d.Available).Select(ResourceTypeItemResponse.Create).ToList(),
+                ServerTypes = Db.ServerType.Select(ResourceTypeItemResponse.Create).ToList(),
             };
+
+        public List<ServerInstanceResponse> GetServerInstances()
+            => Db.ServerInstance
+                .Where((i) => i.DeployTypeNavigation.Available)
+                .Select(ServerInstanceResponse.Create).ToList();
     }
 }

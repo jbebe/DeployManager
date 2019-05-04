@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using DeployManager.Api.Entities;
 using DeployManager.Api.Services;
+using System.Collections.Generic;
+using DeployManager.Api.ApiEntities;
 
 namespace DeployManager.Api.Controllers
 {
@@ -19,5 +20,10 @@ namespace DeployManager.Api.Controllers
         [HttpGet("type")]
         public ActionResult<ResourceTypeResponse> GetResourceTypes()
             => Service.GetResourceTypes();
+
+        // GET api/resource/instance
+        [HttpGet("instance")]
+        public ActionResult<List<ServerInstanceResponse>> GetServerInstances()
+            => Service.GetServerInstances();
     }
 }

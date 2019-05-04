@@ -11,8 +11,10 @@ using Microsoft.Extensions.Logging;
 
 namespace DeployManager.Test
 {
-    public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<Startup>
+    public class DeployManagerWebApiFactory<TStartup> : WebApplicationFactory<Startup>
     {
+        public ServiceProvider Service { get; private set; }
+
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.UseEnvironment("Test");
@@ -32,28 +34,29 @@ namespace DeployManager.Test
                 });
 
                 // Build the service provider.
-                var sp = services.BuildServiceProvider();
+                Service = services.BuildServiceProvider();
 
                 // Create a scope to obtain a reference to the database contexts
-                using (var scope = sp.CreateScope())
+                using (var scope = Service.CreateScope())
                 {
                     var scopedServices = scope.ServiceProvider;
-                    var appDb = scopedServices.GetRequiredService<DeployManagerContext>();
-                    var logger = scopedServices.GetRequiredService<ILogger<CustomWebApplicationFactory<TStartup>>>();
+                    var db = scopedServices.GetRequiredService<DeployManagerContext>();
+                    var logger = scopedServices.GetRequiredService<ILogger<DeployManagerWebApiFactory<TStartup>>>();
 
                     // Ensure the database is created.
-                    appDb.Database.EnsureCreated();
+                    db.Database.EnsureCreated();
 
                     try
                     {
                         // Seed the database with some specific test data.
                         var seeders = new IDatabaseSeeder[] {
-                            new DeployTypeSeed(),
-                            new ServerTypeSeed()
+                            new DeployTypeSeeder(),
+                            new ServerTypeSeeder(),
+                            new ServerInstanceSeeder(),
                         };
                         foreach (var seeder in seeders)
                         {
-                            seeder.SeedAsync(appDb).Wait();
+                            seeder.SeedAsync(db).Wait();
                         }
                     }
                     catch (Exception ex)

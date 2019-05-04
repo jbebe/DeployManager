@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DeployManager.Api.Models
+﻿namespace DeployManager.Api.Models
 {
     public partial class BatchReservation
     {

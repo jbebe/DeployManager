@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 
 namespace DeployManager.Test.Seed
 {
-    internal class DeployTypeSeed: IDatabaseSeeder
+    internal class DeployTypeSeeder: IDatabaseSeeder
     {
         public async Task SeedAsync(Api.Models.DeployManagerContext db)
         {
-            db.DeployType.AddRange(
+            await db.DeployType.AddRangeAsync(
                 new Api.Models.DeployType()
                 {
                     Id = (int)DeployType.Production,

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DeployManager.Api.Entities
+namespace DeployManager.Api.ApiEntities
 {
     public class ResourceTypeItemResponse
     {
