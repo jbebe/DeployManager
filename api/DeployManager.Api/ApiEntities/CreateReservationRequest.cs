@@ -15,8 +15,8 @@ namespace DeployManager.Api.ApiEntities
 
         public Reservation ToReservation(string id)
         {
-            var start = Start.ParseApiString();
-            var end = End.ParseApiString();
+            var start = Start.ParseApiDate();
+            var end = End.ParseApiDate();
             return new Reservation()
             {
                 Id = id,
@@ -31,13 +31,13 @@ namespace DeployManager.Api.ApiEntities
 
         public void Validate()
         {
-            var start = Start.ParseApiString();
+            var start = Start.ParseApiDate();
             if (start == null)
             {
                 throw new Exception("Invalid start date format!");
             }
 
-            var end = End.ParseApiString();
+            var end = End.ParseApiDate();
             if (end == null)
             {
                 throw new Exception("Invalid end date format!");

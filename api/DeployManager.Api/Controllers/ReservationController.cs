@@ -23,7 +23,7 @@ namespace DeployManager.Api.Controllers
         [HttpGet]
         public ActionResult<List<GetReservationResponse>> QueryReservations([FromQuery] string start, [FromQuery] int? deploy, [FromQuery] int? server)
         {
-            var startDate = start.ParseApiString();
+            var startDate = start.ParseApiDate();
             if (!startDate.HasValue)
             {
                 return new BadRequestResult();

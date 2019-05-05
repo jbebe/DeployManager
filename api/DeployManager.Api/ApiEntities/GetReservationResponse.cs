@@ -15,14 +15,14 @@ namespace DeployManager.Api.ApiEntities
                 ServerType = reservation.ServerType,
                 BranchName = reservation.BranchName,
                 UserId = reservation.UserId,
-                Start = reservation.Start.ToApiString(),
-                End = reservation.End.ToApiString(),
+                Start = reservation.Start.ToApiDate(),
+                End = reservation.End.ToApiDate(),
             };
 
         public Reservation ToReservation()
         {
-            var start = Start.ParseApiString();
-            var end = End.ParseApiString();
+            var start = Start.ParseApiDate();
+            var end = End.ParseApiDate();
             return new Reservation()
             {
                 Id = Id,

@@ -44,8 +44,8 @@ namespace DeployManager.Test
                 ServerType = server.NumericValue(),
                 BranchName = Generator.RandomString(10),
                 UserId = Generator.RandomString(32),
-                Start = start.ToApiString(),
-                End = (end ?? start.AddDays(1)).ToApiString(),
+                Start = start.ToApiDate(),
+                End = (end ?? start.AddDays(1)).ToApiDate(),
             };
             var httpResponse = await Client.PostAsync("/api/reservation", request.ToRequestBody());
             httpResponse.EnsureSuccessStatusCode();
@@ -68,6 +68,7 @@ namespace DeployManager.Test
             {
                 var db = scope.ServiceProvider.GetRequiredService<Api.Models.DeployManagerContext>();
                 db.Reservation.RemoveRange(db.Reservation);
+                db.BatchReservation.RemoveRange(db.BatchReservation);
                 await db.SaveChangesAsync();
             }
         }
@@ -80,8 +81,8 @@ namespace DeployManager.Test
                 ServerTypes = serverTypes.Select(t => t.NumericValue()).ToList(),
                 BranchName = Generator.RandomString(10),
                 UserId = Generator.RandomString(10),
-                Start = start.ToApiString(),
-                End = end.ToApiString(),
+                Start = start.ToApiDate(),
+                End = end.ToApiDate(),
             };
 
             var httpResponse = await Client.PostAsync("/api/batch/reservation", request.ToRequestBody());
@@ -93,7 +94,7 @@ namespace DeployManager.Test
 
         private async Task<List<GetBatchReservationResponse>> QueryBatchReservationAsync(DateTime start, DeployType deployType)
         {
-            var httpResponse = await Client.GetAsync($"/api/batch/reservation?start={start.ToApiString()}&deploy={deployType.NumericValue()}");
+            var httpResponse = await Client.GetAsync($"/api/batch/reservation?start={start.ToApiDate()}&deploy={deployType.NumericValue()}");
             httpResponse.EnsureSuccessStatusCode();
             var stringResponse = await httpResponse.Content.ReadAsStringAsync();
 
@@ -149,14 +150,14 @@ namespace DeployManager.Test
                 await CreateReservationAsync(now.AddDays(-1), DeployType.DevelopmentStaging, ServerType.AccountApi, now.AddHours(-1));
 
                 // Act
-                var httpResponse = await Client.GetAsync($"/api/reservation?start={now.ToApiString()}");
+                var httpResponse = await Client.GetAsync($"/api/reservation?start={now.ToApiDate()}");
                 var stringResponse = await httpResponse.Content.ReadAsStringAsync();
 
                 // Assert
                 httpResponse.EnsureSuccessStatusCode();
                 var reservations = JsonConvert.DeserializeObject<List<GetReservationResponse>>(stringResponse);
                 Assert.Single(reservations);
-                Assert.Equal(now.ToApiString().ParseApiString().Value, reservations.Single().End.ParseApiString().Value);
+                Assert.Equal(now.ToApiDate().ParseApiDate().Value, reservations.Single().End.ParseApiDate().Value);
             }
             finally
             {
@@ -175,7 +176,7 @@ namespace DeployManager.Test
                 await CreateReservationAsync(now, DeployType.DevelopmentStaging, ServerType.AccountApi);
 
                 // Act
-                var httpResponse = await Client.GetAsync($"/api/reservation?start={now.ToApiString()}&deploy={DeployType.Development.NumericValue()}");
+                var httpResponse = await Client.GetAsync($"/api/reservation?start={now.ToApiDate()}&deploy={DeployType.Development.NumericValue()}");
                 var stringResponse = await httpResponse.Content.ReadAsStringAsync();
 
                 // Assert
@@ -201,7 +202,7 @@ namespace DeployManager.Test
                 await CreateReservationAsync(now, DeployType.Development, ServerType.FileServer);
 
                 // Act
-                var httpResponse = await Client.GetAsync($"/api/reservation?start={now.ToApiString()}&server={ServerType.AccountApi.NumericValue()}");
+                var httpResponse = await Client.GetAsync($"/api/reservation?start={now.ToApiDate()}&server={ServerType.AccountApi.NumericValue()}");
                 var stringResponse = await httpResponse.Content.ReadAsStringAsync();
 
                 // Assert
@@ -233,8 +234,8 @@ namespace DeployManager.Test
                     ServerType = ServerType.AccountApi.NumericValue(),
                     BranchName = Generator.RandomString(10),
                     UserId = Generator.RandomString(32),
-                    Start = now.ToApiString(),
-                    End = now.AddDays(5).ToApiString(),
+                    Start = now.ToApiDate(),
+                    End = now.AddDays(5).ToApiDate(),
                 };
 
                 // Act
@@ -266,8 +267,8 @@ namespace DeployManager.Test
                     ServerType = ServerType.AccountApi.NumericValue(),
                     BranchName = Generator.RandomString(10),
                     UserId = Generator.RandomString(32),
-                    Start = now.ToApiString(),
-                    End = now.AddDays(1).ToApiString(),
+                    Start = now.ToApiDate(),
+                    End = now.AddDays(1).ToApiDate(),
                 };
                 var httpResponse = await Client.PostAsync("/api/reservation", request.ToRequestBody());
                 var id = (await httpResponse.Content.ReadAsStringAsync()).DeserializeJson<CreateReservationResponse>().Id;
@@ -300,14 +301,14 @@ namespace DeployManager.Test
                     ServerType = ServerType.AccountApi.NumericValue(),
                     BranchName = Generator.RandomString(10),
                     UserId = Generator.RandomString(32),
-                    Start = now.ToApiString(),
-                    End = now.AddDays(1).ToApiString(),
+                    Start = now.ToApiDate(),
+                    End = now.AddDays(1).ToApiDate(),
                 };
                 var httpResponse = await Client.PostAsync("/api/reservation", request.ToRequestBody());
                 var id = (await httpResponse.Content.ReadAsStringAsync()).DeserializeJson<CreateReservationResponse>().Id;
                 var reservation = await GetReservationAsync(id);
-                reservation.Start = now.AddDays(10).ToApiString();
-                reservation.End = now.AddDays(10 + 1).ToApiString();
+                reservation.Start = now.AddDays(10).ToApiDate();
+                reservation.End = now.AddDays(10 + 1).ToApiDate();
 
                 // Act
                 httpResponse = await Client.PutAsync($"/api/reservation", reservation.ToRequestBody());
@@ -364,8 +365,8 @@ namespace DeployManager.Test
                         .Select(t => t.NumericValue()).ToList(),
                     BranchName = Generator.RandomString(10),
                     UserId = Generator.RandomString(10),
-                    Start = now.ToApiString(),
-                    End = now.AddDays(2).ToApiString(),
+                    Start = now.ToApiDate(),
+                    End = now.AddDays(2).ToApiDate(),
                 };
 
                 // Act
@@ -408,7 +409,7 @@ namespace DeployManager.Test
                 await CreateBatchReservationAsync(start, end, DeployType.Development, serverTypes);
 
                 // Act
-                var httpResponse = await Client.GetAsync($"/api/batch/reservation?start={start.ToApiString()}&deploy={deployType.NumericValue()}");
+                var httpResponse = await Client.GetAsync($"/api/batch/reservation?start={start.ToApiDate()}&deploy={deployType.NumericValue()}");
 
                 // Assert
                 httpResponse.EnsureSuccessStatusCode();
@@ -422,8 +423,8 @@ namespace DeployManager.Test
                     foreach (var reservationId in batch.Reservations)
                     {
                         var reservation = await GetReservationAsync(reservationId);
-                        Assert.Equal(start.ToApiString(), reservation.Start);
-                        Assert.Equal(end.ToApiString(), reservation.End);
+                        Assert.Equal(start.ToApiDate(), reservation.Start);
+                        Assert.Equal(end.ToApiDate(), reservation.End);
                         Assert.Equal(deployType.NumericValue(), reservation.DeployType);
                     }
                 }
@@ -454,6 +455,41 @@ namespace DeployManager.Test
                 httpResponse.EnsureSuccessStatusCode();
                 var batches = await QueryBatchReservationAsync(start, deployType);
                 Assert.Empty(batches);
+            }
+            finally
+            {
+                await CleanUpReservationsAsync();
+            }
+        }
+
+        [Fact]
+        public async Task Batch_GetAvailability_Success()
+        {
+            try
+            {
+                // Arrange
+                var start = DateTime.UtcNow;
+                var end = start.AddDays(1);
+                var serverTypes = new[] { ServerType.AccountApi, ServerType.FileServerWorker };
+                var deployType = DeployType.DevelopmentStaging;
+                await CreateBatchReservationAsync(start, end, DeployType.DevelopmentStaging, serverTypes);
+                await CreateBatchReservationAsync(start.AddDays(1), end.AddDays(1), DeployType.DevelopmentStaging, serverTypes);
+                var request = new AvailabilityRequest
+                {
+                    DeployType = deployType.NumericValue(),
+                    ServerTypes = serverTypes.Select((s) => s.NumericValue()).ToList(),
+                    Duration = TimeSpan.FromDays(1).ToApiDuration(),
+                    Min = start.ToApiDate(),
+                    Max = (start + TimeSpan.FromDays(14)).ToApiDate(),
+                };
+
+                // Act
+                var httpResponse = await Client.PostAsync($"/api/batch/availability", request.ToRequestBody());
+
+                // Assert
+                httpResponse.EnsureSuccessStatusCode();
+                var availabilities = (await httpResponse.Content.ReadAsStringAsync()).DeserializeJson<List<AvailabilityResponse>>();
+                Assert.Single(availabilities);
             }
             finally
             {

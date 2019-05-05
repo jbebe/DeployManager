@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DeployManager.Api.Controllers
 {
-    [Route("api/batch/reservation")]
+    [Route("api/batch")]
     [ApiController]
     public class BatchReservationController : ControllerBase
     {
@@ -19,10 +19,10 @@ namespace DeployManager.Api.Controllers
         }
 
         // GET: api/BatchReservation
-        [HttpGet]
+        [HttpGet("reservation")]
         public ActionResult<List<GetBatchReservationResponse>> QueryBatchReservations([FromQuery] string start, [FromQuery] int? deploy)
         {
-            var startDate = start.ParseApiString();
+            var startDate = start.ParseApiDate();
             if (!startDate.HasValue)
             {
                 return new BadRequestResult();
@@ -32,7 +32,7 @@ namespace DeployManager.Api.Controllers
         }
 
         // POST: api/batch/reservation
-        [HttpPost]
+        [HttpPost("reservation")]
         public async Task<ActionResult<CreateBatchReservationResponse>> CreateBatchReservation([FromBody] CreateBatchReservationRequest request)
         {
             var response = await Service.CreateBatchReservationAsync(request);
@@ -41,10 +41,17 @@ namespace DeployManager.Api.Controllers
         }
 
         // DELETE: api/batch/reservation/764352334265
-        [HttpDelete("{id}")]
+        [HttpDelete("reservation/{id}")]
         public async Task DeleteBatchReservation([FromRoute] string id)
         {
             await Service.DeleteBatchReservationAsync(id);
+        }
+
+        // POST: api/batch/availability
+        [HttpPost("availability")]
+        public ActionResult<List<AvailabilityResponse>> GetAvailability([FromBody] AvailabilityRequest request)
+        {
+            return Service.GetAvailability(request);
         }
     }
 }
