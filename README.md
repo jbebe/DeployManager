@@ -237,9 +237,12 @@ Output: -
 
 **Get batch reservations**
 ```
-Format: GET /api/batch/reservation
+Format: GET /api/batch/reservation?start=19991231123456&deploy=5
 Description:
     Returns batch reservations ordered from oldest to newest.
+Query:
+    start: yyyyMMddhhmmss date
+    deploy: DeployType enum value
 Authorization: 
     * Exists in GlobalAuthorization table
     * Batch reservation is yours OR permission is ADMIN
@@ -300,7 +303,7 @@ Output: -
 
 **Get free times for reservation**
 ```
-Format: GET /api/batch/available
+Format: GET /api/batch/availability
 Description:
     Gets available reservation times in a given interval.
 Authorization: 

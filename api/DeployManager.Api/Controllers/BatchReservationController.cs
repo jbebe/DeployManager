@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using DeployManager.Api.ApiEntities;
+using DeployManager.Api.Helper;
 using DeployManager.Api.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DeployManager.Api.Controllers
@@ -22,16 +20,15 @@ namespace DeployManager.Api.Controllers
 
         // GET: api/BatchReservation
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<GetBatchReservationResponse>> QueryBatchReservations([FromQuery] string start, [FromQuery] int? deploy)
         {
-            return new string[] { "value1", "value2" };
-        }
+            var startDate = start.ParseApiString();
+            if (!startDate.HasValue)
+            {
+                return new BadRequestResult();
+            }
 
-        // GET: api/BatchReservation/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
+            return Service.QueryBatchReservations(startDate.Value, deploy);
         }
 
         // POST: api/batch/reservation
@@ -43,10 +40,11 @@ namespace DeployManager.Api.Controllers
             return response;
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/batch/reservation/764352334265
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task DeleteBatchReservation([FromRoute] string id)
         {
+            await Service.DeleteBatchReservationAsync(id);
         }
     }
 }

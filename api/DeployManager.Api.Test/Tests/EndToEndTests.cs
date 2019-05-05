@@ -72,6 +72,34 @@ namespace DeployManager.Test
             }
         }
 
+        private async Task<CreateBatchReservationResponse> CreateBatchReservationAsync(DateTime start, DateTime end, DeployType deployType, ServerType[] serverTypes)
+        {
+            var request = new CreateBatchReservationRequest()
+            {
+                DeployType = deployType.NumericValue(),
+                ServerTypes = serverTypes.Select(t => t.NumericValue()).ToList(),
+                BranchName = Generator.RandomString(10),
+                UserId = Generator.RandomString(10),
+                Start = start.ToApiString(),
+                End = end.ToApiString(),
+            };
+
+            var httpResponse = await Client.PostAsync("/api/batch/reservation", request.ToRequestBody());
+            httpResponse.EnsureSuccessStatusCode();
+            var responseJson = await httpResponse.Content.ReadAsStringAsync();
+
+            return responseJson.DeserializeJson<CreateBatchReservationResponse>();
+        }
+
+        private async Task<List<GetBatchReservationResponse>> QueryBatchReservationAsync(DateTime start, DeployType deployType)
+        {
+            var httpResponse = await Client.GetAsync($"/api/batch/reservation?start={start.ToApiString()}&deploy={deployType.NumericValue()}");
+            httpResponse.EnsureSuccessStatusCode();
+            var stringResponse = await httpResponse.Content.ReadAsStringAsync();
+
+            return stringResponse.DeserializeJson<List<GetBatchReservationResponse>>();
+        }
+
         #endregion
 
         #region Resources
@@ -359,6 +387,73 @@ namespace DeployManager.Test
                         request.End,
                     }.ToExpectedObject().ShouldMatch(reservation);
                 }
+            }
+            finally
+            {
+                await CleanUpReservationsAsync();
+            }
+        }
+
+        [Fact]
+        public async Task Batch_GetReservation_Success()
+        {
+            try
+            {
+                // Arrange
+                var start = DateTime.UtcNow;
+                var end = start.AddDays(2);
+                var serverTypes = new[] { ServerType.AccountApi, ServerType.FileServerWorker };
+                var deployType = DeployType.DevelopmentStaging;
+                var batchId = (await CreateBatchReservationAsync(start, end, deployType, serverTypes)).Id;
+                await CreateBatchReservationAsync(start, end, DeployType.Development, serverTypes);
+
+                // Act
+                var httpResponse = await Client.GetAsync($"/api/batch/reservation?start={start.ToApiString()}&deploy={deployType.NumericValue()}");
+
+                // Assert
+                httpResponse.EnsureSuccessStatusCode();
+                var stringResponse = await httpResponse.Content.ReadAsStringAsync();
+                var batchResponse = stringResponse.DeserializeJson<List<GetBatchReservationResponse>>();
+                Assert.Single(batchResponse);
+                foreach (var batch in batchResponse)
+                {
+                    Assert.Equal(batchId, batch.Id);
+                    Assert.Equal(serverTypes.Length, batch.Reservations.Count);
+                    foreach (var reservationId in batch.Reservations)
+                    {
+                        var reservation = await GetReservationAsync(reservationId);
+                        Assert.Equal(start.ToApiString(), reservation.Start);
+                        Assert.Equal(end.ToApiString(), reservation.End);
+                        Assert.Equal(deployType.NumericValue(), reservation.DeployType);
+                    }
+                }
+            }
+            finally
+            {
+                await CleanUpReservationsAsync();
+            }
+        }
+
+        [Fact]
+        public async Task Batch_DeleteReservation_Success()
+        {
+            try
+            {
+                // Arrange
+                var start = DateTime.UtcNow;
+                var end = start.AddDays(2);
+                var serverTypes = new[] { ServerType.AccountApi, ServerType.FileServerWorker };
+                var deployType = DeployType.DevelopmentStaging;
+                var batchId = (await CreateBatchReservationAsync(start, end, deployType, serverTypes)).Id;
+                await CreateBatchReservationAsync(start, end, DeployType.Development, serverTypes);
+
+                // Act
+                var httpResponse = await Client.DeleteAsync($"/api/batch/reservation/{batchId}");
+
+                // Assert
+                httpResponse.EnsureSuccessStatusCode();
+                var batches = await QueryBatchReservationAsync(start, deployType);
+                Assert.Empty(batches);
             }
             finally
             {

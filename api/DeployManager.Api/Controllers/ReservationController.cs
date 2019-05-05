@@ -34,7 +34,7 @@ namespace DeployManager.Api.Controllers
 
         // GET: api/reservation/764352334265
         [HttpGet("{id}")]
-        public ActionResult<GetReservationResponse> GetReservation(string id)
+        public ActionResult<GetReservationResponse> GetReservation([FromRoute] string id)
         {
             try
             {
@@ -67,7 +67,7 @@ namespace DeployManager.Api.Controllers
 
         // DELETE: api/reservation/764352334265
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteReservation(string id)
+        public async Task<ActionResult> DeleteReservation([FromRoute] string id)
         {
             try
             {
